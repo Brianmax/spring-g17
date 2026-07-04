@@ -1,4 +1,4 @@
-package com.codigo.spring_g17.utils;
+package com.codigo.spring_g17.service.utils;
 
 import java.security.SecureRandom;
 
