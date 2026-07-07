@@ -1,7 +1,7 @@
 package com.codigo.spring_g17.controller;
 
 import com.codigo.spring_g17.dto.input.UsuarioCreateDto;
-import com.codigo.spring_g17.dto.ouput.UsuarioCreateResponse;
+import com.codigo.spring_g17.dto.ouput.UsuarioResponse;
 import com.codigo.spring_g17.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<UsuarioCreateResponse> crearUsuario(@Valid @RequestBody UsuarioCreateDto usuarioCreateDto) {
-        UsuarioCreateResponse userResponse = usuarioService.createUsuario(usuarioCreateDto);
+    public ResponseEntity<UsuarioResponse> crearUsuario(@Valid @RequestBody UsuarioCreateDto usuarioCreateDto) {
+        UsuarioResponse userResponse = usuarioService.createUsuario(usuarioCreateDto);
         if(userResponse == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -29,8 +29,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioCreateResponse> findById(@PathVariable UUID id) {
-        UsuarioCreateResponse userResponse = usuarioService.findUsuarioById(id);
+    public ResponseEntity<UsuarioResponse> findById(@PathVariable UUID id) {
+        UsuarioResponse userResponse = usuarioService.findUsuarioById(id);
         if(userResponse == null) {
             return ResponseEntity.notFound().build();
         }
