@@ -20,9 +20,6 @@ public class UsuarioService {
 
     public UsuarioCreateResponse createUsuario(UsuarioCreateDto usuarioCreateDto) {
         String dni = usuarioCreateDto.getDni();
-        if(dni.length() != 8) {
-            return null;
-        }
         // generar contrasenia para el usuario nuevo
         String password = PasswordGenerator.generatePassword(
                 10,
