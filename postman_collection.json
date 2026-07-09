@@ -193,6 +193,71 @@
               "header": []
             }
           ]
+        },
+        {
+          "name": "Agregar Rol a Usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has roles array with the new role', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.roles).to.be.an('array');",
+                  "    pm.expect(jsonData.roles).to.include.members([pm.request.url.query.get('role')]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/usuario/role?role=ADMIN&usuarioId={{usuario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "usuario", "role"],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "ADMIN",
+                  "description": "Nombre del rol a asignar (ADMIN, INVITADO, OFFICER)"
+                },
+                {
+                  "key": "usuarioId",
+                  "value": "{{usuario_id}}",
+                  "description": "UUID del usuario"
+                }
+              ]
+            },
+            "description": "Asigna un rol a un usuario existente.\n\nQuery parameters:\n- role (String): Nombre del rol (ADMIN, INVITADO, OFFICER)\n- usuarioId (UUID): ID del usuario"
+          },
+          "response": [
+            {
+              "name": "Role Assigned",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"usuarioId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"username\": \"jperez\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"dni\": \"12345678\",\n  \"estado\": true,\n  \"roles\": [\"ADMIN\"]\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            {
+              "name": "Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "",
+              "header": []
+            }
+          ]
         }
       ],
       "description": "Endpoints para gestion de usuarios"
