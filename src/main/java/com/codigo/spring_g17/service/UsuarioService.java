@@ -2,21 +2,27 @@ package com.codigo.spring_g17.service;
 
 import com.codigo.spring_g17.dto.input.UsuarioCreateDto;
 import com.codigo.spring_g17.dto.ouput.UsuarioResponse;
+import com.codigo.spring_g17.entity.RoleEntity;
 import com.codigo.spring_g17.entity.UsuarioEntity;
+import com.codigo.spring_g17.repository.RoleRepository;
 import com.codigo.spring_g17.repository.UsuarioRepository;
+import com.codigo.spring_g17.service.utils.Mapper;
 import com.codigo.spring_g17.service.utils.PasswordGenerator;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final RoleRepository roleRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, RoleRepository roleRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.roleRepository = roleRepository;
     }
 
     public UsuarioResponse createUsuario(UsuarioCreateDto usuarioCreateDto) {
@@ -29,24 +35,10 @@ public class UsuarioService {
                 true,
                 true);
 
-        UsuarioEntity usuarioEntity = new UsuarioEntity();
-        usuarioEntity.setUsername(usuarioCreateDto.getUsername());
+        UsuarioEntity usuarioEntity = Mapper.fromUsuarioCreateDto(usuarioCreateDto);
         usuarioEntity.setPassword(password);
-        usuarioEntity.setNombre(usuarioCreateDto.getNombre());
-        usuarioEntity.setApellido(usuarioCreateDto.getApellido());
-        usuarioEntity.setDni(dni);
-
         usuarioRepository.save(usuarioEntity);
-
-        return new UsuarioResponse(
-                usuarioEntity.getIdUsuario(),
-                usuarioEntity.getUsername(),
-                usuarioEntity.getNombre(),
-                usuarioEntity.getApellido(),
-                usuarioEntity.getDni(),
-                usuarioEntity.isEstado(),
-                new ArrayList<>()
-        );
+        return Mapper.fromUsuarioEntity(usuarioEntity);
     }
 
     public UsuarioResponse findUsuarioById(UUID id) {
@@ -55,16 +47,20 @@ public class UsuarioService {
             return null;
         }
         UsuarioEntity usuarioEntity = optionalUsuario.get();
-        // obtener cada uno de los roles
-        // mapearlos a un array de strings
-        // devolverlos en el DTO
-        return new UsuarioResponse(
-                usuarioEntity.getIdUsuario(),
-                usuarioEntity.getUsername(),
-                usuarioEntity.getNombre(),
-                usuarioEntity.getApellido(),
-                usuarioEntity.getDni(),
-                usuarioEntity.isEstado(),
-        );
+        return Mapper.fromUsuarioEntity(usuarioEntity);
+    }
+
+    public UsuarioResponse agregarRoleUsuario(String role, UUID idUsuario) {
+        Optional<RoleEntity> roleOptional = roleRepository.findByNombe(role);
+        Optional<UsuarioEntity> usuarioOptional = usuarioRepository.findById(idUsuario);
+        if(roleOptional.isEmpty() || usuarioOptional.isEmpty()) {
+            return null;
+        }
+
+        UsuarioEntity usuarioEntity = usuarioOptional.get();
+        usuarioEntity.getRoles().add(roleOptional.get());
+
+        usuarioRepository.save(usuarioEntity);
+        return Mapper.fromUsuarioEntity(usuarioEntity);
     }
 }

@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "usuario")
+@Table(name = "usuario", schema = "users")
 public class UsuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -37,6 +37,7 @@ public class UsuarioEntity {
     @ManyToMany
     @JoinTable(
             name = "usuario_role",
+            schema = "users",
             joinColumns = @JoinColumn(name = "id_usuario_fk"),
             inverseJoinColumns = @JoinColumn(name = "id_role_fk")
     )
