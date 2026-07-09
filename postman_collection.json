@@ -1,0 +1,269 @@
+{
+  "info": {
+    "name": "Spring G17 API",
+    "description": "Colección de endpoints para la API del blog Spring G17.\n\nBase URL: {{base_url}}",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Basic",
+      "item": [
+        {
+          "name": "Hello",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/hello",
+              "host": ["{{base_url}}"],
+              "path": ["hello"]
+            },
+            "description": "Retorna \"Hello, World!\""
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "Hello, World!",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Bye",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bye",
+              "host": ["{{base_url}}"],
+              "path": ["bye"]
+            },
+            "description": "Retorna \"Goodbye, World!\""
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "Goodbye, World!",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints básicos de prueba"
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Crear Usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has usuarioId', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.usuarioId).to.not.be.null;",
+                  "    pm.expect(jsonData.username).to.eql(JSON.parse(pm.request.body.raw).username);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jperez\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"dni\": \"12345678\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios/save",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "save"]
+            },
+            "description": "Crea un nuevo usuario.\n\nValidaciones:\n- username: obligatorio, entre 4 y 50 caracteres\n- nombre: obligatorio\n- apellido: obligatorio\n- dni: obligatorio, exactamente 8 digitos"
+          },
+          "response": [
+            {
+              "name": "Created",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"usuarioId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"username\": \"jperez\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"dni\": \"12345678\",\n  \"estado\": true\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            {
+              "name": "Validation Error",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"dni\": \"El DNI debe tener 8 digitos\",\n  \"username\": \"El username es obligatorio\"\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Obtener Usuario por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has usuarioId', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.usuarioId).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/{{usuario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "{{usuario_id}}"]
+            },
+            "description": "Obtiene un usuario por su UUID.\n\nPath parameter:\n- id (UUID): ID del usuario"
+          },
+          "response": [
+            {
+              "name": "Found",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"usuarioId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"username\": \"jperez\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"dni\": \"12345678\",\n  \"estado\": true\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            {
+              "name": "Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "",
+              "header": []
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints para gestion de usuarios"
+    },
+    {
+      "name": "Articulos",
+      "item": [
+        {
+          "name": "Crear Articulo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has idArticulo', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.idArticulo).to.not.be.null;",
+                  "    pm.expect(jsonData.titulo).to.eql(JSON.parse(pm.request.body.raw).titulo);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUsuario\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n  \"titulo\": \"Mi primer articulo\",\n  \"contenido\": \"Este es el contenido del articulo.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/articulos/save",
+              "host": ["{{base_url}}"],
+              "path": ["articulos", "save"]
+            },
+            "description": "Crea un nuevo articulo asociado a un usuario existente.\n\nValidaciones:\n- idUsuario: obligatorio (UUID valido)\n- titulo: obligatorio\n- contenido: obligatorio"
+          },
+          "response": [
+            {
+              "name": "Created",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"idArticulo\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n  \"titulo\": \"Mi primer articulo\",\n  \"contenido\": \"Este es el contenido del articulo.\",\n  \"fechaCreacion\": \"2026-07-06T12:00:00\",\n  \"fechaActualizacion\": \"2026-07-06T12:00:00\",\n  \"nombreUsuario\": \"jperez\"\n}",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            {
+              "name": "Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "",
+              "header": []
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints para gestion de articulos"
+    }
+  ]
+}
