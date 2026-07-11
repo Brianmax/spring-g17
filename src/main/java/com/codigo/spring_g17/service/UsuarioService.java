@@ -10,10 +10,8 @@ import com.codigo.spring_g17.service.utils.Mapper;
 import com.codigo.spring_g17.service.utils.PasswordGenerator;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import javax.management.relation.Role;
+import java.util.*;
 
 @Service
 public class UsuarioService {
@@ -58,7 +56,9 @@ public class UsuarioService {
         }
 
         UsuarioEntity usuarioEntity = usuarioOptional.get();
-        usuarioEntity.getRoles().add(roleOptional.get());
+        RoleEntity roleEntity = roleOptional.get();
+        Set<RoleEntity> rolesCollection = usuarioEntity.getRoles();
+        rolesCollection.add(roleEntity);
 
         usuarioRepository.save(usuarioEntity);
         return Mapper.fromUsuarioEntity(usuarioEntity);
