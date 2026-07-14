@@ -8,8 +8,10 @@ import com.codigo.spring_g17.entity.UsuarioEntity;
 import com.codigo.spring_g17.repository.ArticuloRepository;
 import com.codigo.spring_g17.repository.UsuarioRepository;
 import com.codigo.spring_g17.service.utils.Mapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.sound.midi.MidiUnavailableException;
 import java.sql.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,5 +69,20 @@ public class ArticuloService {
         articuloEntity.setFechaActualizacion(new Date(System.currentTimeMillis()).toString());
         articuloRepository.save(articuloEntity);
         return Mapper.fromArticuloEntity(articuloEntity);
+    }
+
+    public void deleteArticulo(UUID idArticulo, boolean isDraft) {
+        Optional<ArticuloEntity> articuloEntityOptional = articuloRepository.findById(idArticulo);
+        if(articuloEntityOptional.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        if(isDraft) {
+            ArticuloEntity articuloEntity = articuloEntityOptional.get();
+            articuloEntity.setEstado(false);
+            articuloRepository.save(articuloEntity);
+        } else {
+            articuloRepository.deleteById(idArticulo);
+        }
+
     }
 }

@@ -413,6 +413,48 @@
               "header": []
             }
           ]
+        },
+        {
+          "name": "Eliminar Articulo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 204', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/articulos/delete/{{articulo_id}}?isDraft=true",
+              "host": ["{{base_url}}"],
+              "path": ["articulos", "delete", "{{articulo_id}}"],
+              "query": [
+                {
+                  "key": "isDraft",
+                  "value": "true",
+                  "description": "Indica si el articulo se encuentra en estado borrador"
+                }
+              ]
+            },
+            "description": "Elimina un articulo existente.\n\nPath parameter:\n- idArticulo (UUID): ID del articulo a eliminar\n\nQuery parameters:\n- isDraft (boolean): Indica si el articulo es borrador para permitir eliminacion"
+          },
+          "response": [
+            {
+              "name": "No Content",
+              "status": "No Content",
+              "code": 204,
+              "body": "",
+              "header": []
+            }
+          ]
         }
       ],
       "description": "Endpoints para gestion de articulos"

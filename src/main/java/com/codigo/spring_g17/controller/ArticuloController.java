@@ -43,4 +43,12 @@ public class ArticuloController {
         }
         return ResponseEntity.accepted().body(acr);
     }
+
+    @DeleteMapping("/delete/{idArticulo}")
+    public ResponseEntity<Void> deleteArticulo(
+        @PathVariable UUID idArticulo,
+        @RequestParam boolean isDraft) {
+        articuloService.deleteArticulo(idArticulo, isDraft);
+        return ResponseEntity.noContent().build();
+    }
 }
