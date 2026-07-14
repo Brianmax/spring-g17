@@ -5,7 +5,6 @@ import com.codigo.spring_g17.dto.input.ArticuloUpdateDto;
 import com.codigo.spring_g17.dto.ouput.ArticuloCreateResponse;
 import com.codigo.spring_g17.service.ArticuloService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

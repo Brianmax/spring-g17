@@ -21,8 +21,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<UsuarioResponse> crearUsuario(@Valid @RequestBody UsuarioCreateDto usuarioCreateDto) {
-        UsuarioResponse userResponse = usuarioService.createUsuario(usuarioCreateDto);
+    public ResponseEntity<UsuarioResponse> crearUsuario(@RequestParam String dni) {
+        UsuarioResponse userResponse = usuarioService.createUsuario(dni);
         if(userResponse == null) {
             return ResponseEntity.badRequest().build();
         }

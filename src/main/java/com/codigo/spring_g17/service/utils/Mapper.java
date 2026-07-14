@@ -3,6 +3,7 @@ package com.codigo.spring_g17.service.utils;
 import com.codigo.spring_g17.dto.input.ArticuloCreateDto;
 import com.codigo.spring_g17.dto.input.UsuarioCreateDto;
 import com.codigo.spring_g17.dto.ouput.ArticuloCreateResponse;
+import com.codigo.spring_g17.dto.ouput.ReniecResponseApi;
 import com.codigo.spring_g17.dto.ouput.UsuarioResponse;
 import com.codigo.spring_g17.entity.ArticuloEntity;
 import com.codigo.spring_g17.entity.RoleEntity;
@@ -28,12 +29,12 @@ public class Mapper {
         );
     }
 
-    public static UsuarioEntity fromUsuarioCreateDto(UsuarioCreateDto usuarioCreateDto) {
+    public static UsuarioEntity fromUsuarioCreateDto(ReniecResponseApi responseReniec) {
         UsuarioEntity usuarioEntity = new UsuarioEntity();
-        usuarioEntity.setUsername(usuarioCreateDto.getUsername());
-        usuarioEntity.setNombre(usuarioCreateDto.getNombre());
-        usuarioEntity.setApellido(usuarioCreateDto.getApellido());
-        usuarioEntity.setDni(usuarioCreateDto.getDni());
+        usuarioEntity.setNombre(responseReniec.getFirstName());
+        usuarioEntity.setApellido(responseReniec.getFirstLastName());
+        usuarioEntity.setUsername(responseReniec.getDocumentNumber());
+        usuarioEntity.setDni(responseReniec.getDocumentNumber());
         return usuarioEntity;
     }
 
