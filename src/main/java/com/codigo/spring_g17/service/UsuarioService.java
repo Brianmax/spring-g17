@@ -91,4 +91,18 @@ public class UsuarioService {
         usuarioEntity.setPassword(password);
         usuarioRepository.save(usuarioEntity);
     }
+
+    public UsuarioResponse changeUsername(UUID usuarioId, String username) {
+        // validacion del username
+        if(usuarioRepository.existsByUsername(username)) {
+            return null;
+        }
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(usuarioId).orElse(null);
+        if(usuarioEntity == null) {
+            return null;
+        }
+        usuarioEntity.setUsername(username);
+        usuarioRepository.save(usuarioEntity);
+        return Mapper.fromUsuarioEntity(usuarioEntity);
+    }
 }

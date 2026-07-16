@@ -58,4 +58,16 @@ public class UsuarioController {
         usuarioService.changePassword(passwordDto.getPassword(), usuarioId);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/username/{id}")
+    public ResponseEntity<UsuarioResponse> changeUsername(
+            @RequestParam String username,
+            @PathVariable(name = "id") UUID usuarioId
+            ) {
+        UsuarioResponse usuarioResponse = usuarioService.changeUsername(usuarioId, username);
+        if(usuarioResponse == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().body(usuarioResponse);
+    }
 }
