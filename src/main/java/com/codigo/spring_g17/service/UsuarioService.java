@@ -10,6 +10,7 @@ import com.codigo.spring_g17.repository.RoleRepository;
 import com.codigo.spring_g17.repository.UsuarioRepository;
 import com.codigo.spring_g17.service.utils.Mapper;
 import com.codigo.spring_g17.service.utils.PasswordGenerator;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -77,5 +78,17 @@ public class UsuarioService {
 
         usuarioRepository.save(usuarioEntity);
         return Mapper.fromUsuarioEntity(usuarioEntity);
+    }
+
+    public void changePassword(String password, UUID userId) {
+        PasswordGenerator.validatePassword(password);
+
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(userId).orElse(null);
+        if(usuarioEntity == null) {
+            throw new EntityNotFoundException();
+        }
+
+        usuarioEntity.setPassword(password);
+        usuarioRepository.save(usuarioEntity);
     }
 }

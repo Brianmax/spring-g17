@@ -99,7 +99,6 @@
                   "pm.test('Response has usuarioId', function () {",
                   "    var jsonData = pm.response.json();",
                   "    pm.expect(jsonData.usuarioId).to.not.be.null;",
-                  "    pm.expect(jsonData.username).to.eql(JSON.parse(pm.request.body.raw).username);",
                   "});",
                   "",
                   "if (pm.response.code === 200) {",
@@ -113,22 +112,20 @@
           ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"jperez\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"dni\": \"12345678\"\n}"
-            },
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/usuarios/save",
+              "raw": "{{base_url}}/usuarios/save?dni=12345678",
               "host": ["{{base_url}}"],
-              "path": ["usuarios", "save"]
+              "path": ["usuarios", "save"],
+              "query": [
+                {
+                  "key": "dni",
+                  "value": "12345678",
+                  "description": "DNI del usuario (exactamente 8 digitos)"
+                }
+              ]
             },
-            "description": "Crea un nuevo usuario.\n\nValidaciones:\n- username: obligatorio, entre 4 y 50 caracteres\n- nombre: obligatorio\n- apellido: obligatorio\n- dni: obligatorio, exactamente 8 digitos"
+            "description": "Crea un nuevo usuario.\n\nQuery parameters:\n- dni: obligatorio, exactamente 8 digitos"
           },
           "response": [
             {
@@ -233,10 +230,10 @@
           "request": {
             "method": "POST",
             "header": [],
-            "url": {
-              "raw": "{{base_url}}/usuarios/usuario/role?role=ADMIN&usuarioId={{usuario_id}}",
+              "url": {
+              "raw": "{{base_url}}/usuarios/role?role=ADMIN&usuarioId={{usuario_id}}",
               "host": ["{{base_url}}"],
-              "path": ["usuarios", "usuario", "role"],
+              "path": ["usuarios", "role"],
               "query": [
                 {
                   "key": "role",
@@ -269,6 +266,50 @@
               "name": "Bad Request",
               "status": "Bad Request",
               "code": 400,
+              "body": "",
+              "header": []
+            }
+          ]
+        },
+        {
+          "name": "Cambiar Contraseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 204', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"nueva-contraseña-segura\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios/password/{{usuario_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios", "password", "{{usuario_id}}"]
+            },
+            "description": "Cambia la contraseña de un usuario.\n\nPath parameter:\n- id (UUID): ID del usuario\n\nBody:\n- password (String): Nueva contraseña"
+          },
+          "response": [
+            {
+              "name": "No Content",
+              "status": "No Content",
+              "code": 204,
               "body": "",
               "header": []
             }

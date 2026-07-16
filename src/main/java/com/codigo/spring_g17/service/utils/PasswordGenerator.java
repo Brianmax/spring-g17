@@ -10,6 +10,21 @@ public class PasswordGenerator {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
+    public static void validatePassword(String password) {
+        if (password == null || password.length() < 10) {
+            throw new IllegalArgumentException("La contraseña debe tener al menos 10 caracteres.");
+        }
+        if (!password.chars().anyMatch(Character::isUpperCase)) {
+            throw new IllegalArgumentException("La contraseña debe contener al menos una mayúscula.");
+        }
+        if (!password.chars().anyMatch(Character::isDigit)) {
+            throw new IllegalArgumentException("La contraseña debe contener al menos un número.");
+        }
+        if (password.chars().noneMatch(c -> SPECIAL.indexOf(c) >= 0)) {
+            throw new IllegalArgumentException("La contraseña debe contener al menos un carácter especial.");
+        }
+    }
+
     public static String generatePassword(
             int length,
             boolean useUppercase,

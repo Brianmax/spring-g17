@@ -1,5 +1,6 @@
 package com.codigo.spring_g17.controller;
 
+import com.codigo.spring_g17.dto.input.ChangePasswordDto;
 import com.codigo.spring_g17.dto.input.UsuarioCreateDto;
 import com.codigo.spring_g17.dto.ouput.UsuarioResponse;
 import com.codigo.spring_g17.service.UsuarioService;
@@ -38,7 +39,7 @@ public class UsuarioController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PostMapping("/usuario/role")
+    @PostMapping("/role")
     public ResponseEntity<UsuarioResponse> addRoleToUser(
             @RequestParam String role, @RequestParam UUID usuarioId
     ) {
@@ -49,5 +50,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioResponse);
     }
 
-    // retornar un usuario por su id
+    @PatchMapping("/password/{id}")
+    public ResponseEntity<Void> changePassword(
+            @RequestBody ChangePasswordDto passwordDto,
+            @PathVariable(name = "id") UUID usuarioId
+            ) {
+        usuarioService.changePassword(passwordDto.getPassword(), usuarioId);
+        return ResponseEntity.noContent().build();
+    }
 }
