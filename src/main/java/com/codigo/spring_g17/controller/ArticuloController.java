@@ -25,9 +25,6 @@ public class ArticuloController {
             @Valid @RequestBody ArticuloCreateDto articuloCreateDto) {
         ArticuloCreateResponse articuloResponse = articuloService
                 .createArticulo(articuloCreateDto);
-        if (articuloResponse == null) {
-            return ResponseEntity.badRequest().build();
-        }
         return ResponseEntity.ok(articuloResponse);
     }
 

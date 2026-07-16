@@ -12,6 +12,7 @@ import com.codigo.spring_g17.service.utils.Mapper;
 import com.codigo.spring_g17.service.utils.PasswordGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.Role;
@@ -32,6 +33,9 @@ public class UsuarioService {
     }
 
     public UsuarioResponse createUsuario(String dni) {
+        if(usuarioRepository.existsByDni(dni)) {
+            throw new DataIntegrityViolationException("DNI ya existe en la base de datos");
+        }
         ReniecResponseApi reniecResponse = null;
         try {
             reniecResponse =

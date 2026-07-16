@@ -5,11 +5,13 @@ import com.codigo.spring_g17.dto.input.ArticuloUpdateDto;
 import com.codigo.spring_g17.dto.ouput.ArticuloCreateResponse;
 import com.codigo.spring_g17.entity.ArticuloEntity;
 import com.codigo.spring_g17.entity.UsuarioEntity;
+import com.codigo.spring_g17.exception.BadRequestArticuloException;
 import com.codigo.spring_g17.repository.ArticuloRepository;
 import com.codigo.spring_g17.repository.UsuarioRepository;
 import com.codigo.spring_g17.service.utils.Mapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.sound.midi.MidiUnavailableException;
 import java.sql.Date;
@@ -31,7 +33,7 @@ public class ArticuloService {
         Optional<UsuarioEntity> optionalUsuario = usuarioRepository
                 .findById(articuloCreateDto.getIdUsuario());
         if (optionalUsuario.isEmpty()) {
-            return null;
+            throw new EntityNotFoundException("Usuario no encontrado");
         }
         UsuarioEntity usuarioEntity = optionalUsuario.get();
 
@@ -63,7 +65,7 @@ public class ArticuloService {
         } else if(nuevoTitulo != null) {
             articuloEntity.setTitulo(nuevoTitulo);
         } else {
-            return null;
+            throw new BadRequestArticuloException("El titulo y contenido estan vacios");
         }
 
         articuloEntity.setFechaActualizacion(new Date(System.currentTimeMillis()).toString());
